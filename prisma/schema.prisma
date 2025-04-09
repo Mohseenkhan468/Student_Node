@@ -1,0 +1,35 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = "postgresql://postgres:root@localhost:5432/studentdb?schema=public"
+}
+
+model Student {
+  id        String   @id @default(uuid()) // Primary Key
+  name      String
+  email     String   @unique
+  age       Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  marks     Mark[]
+}
+
+model Mark {
+  id        String   @id @default(uuid()) // Primary Key
+  studentId String   // Foreign Key
+  subject   String
+  score     Int
+  createdAt DateTime @default(now())
+
+  student   Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
